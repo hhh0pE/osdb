@@ -237,15 +237,18 @@ func (c *Client) DownloadSubtitles(subtitles Subtitles) ([]SubtitleFile, error) 
 		return nil, err
 	}
 
+	var resultIndex int
 	for i := range subtitleFiles {
 		encodingName := subtitles[i].SubEncoding
 		if encodingName != "" {
 			subtitleFiles[i].Encoding, err = encodingFromName(subtitles[i].SubEncoding)
-			if err != nil {
-				return nil, err
+			if err == nil {
+				subtitleFiles[resultIndex] = subtitleFiles[i]
+				resultIndex++
 			}
 		}
 	}
+	subtitleFiles = subtitleFiles[:resultIndex]
 
 	return subtitleFiles, nil
 }
